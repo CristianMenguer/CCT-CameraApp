@@ -4,16 +4,16 @@
 <br />
 
 <p align="center">
-  <img alt="GitHub top language" src="https://img.shields.io/github/languages/top/cristianmenguer/CCT-Camera?color=red">
+  <img alt="GitHub top language" src="https://img.shields.io/github/languages/top/cristianmenguer/CCT-CameraApp?color=red">
 
-  <img alt="Repository size" src="https://img.shields.io/github/repo-size/cristianmenguer/CCT-Camera?color=blue">
+  <img alt="Repository size" src="https://img.shields.io/github/repo-size/cristianmenguer/CCT-CameraApp?color=blue">
 
-  <a href="https://github.com/cristianmenguer/CCT-Camera/commits/master">
-    <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/cristianmenguer/CCT-Camera?color=orange">
+  <a href="https://github.com/cristianmenguer/CCT-CameraApp/commits/master">
+    <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/cristianmenguer/CCT-CameraApp?color=orange">
   </a>
 
-  <a href="https://github.com/cristianmenguer/CCT-Camera/issues">
-    <img alt="Repository issues" src="https://img.shields.io/github/issues/cristianmenguer/CCT-Camera?color=green">
+  <a href="https://github.com/cristianmenguer/CCT-CameraApp/issues">
+    <img alt="Repository issues" src="https://img.shields.io/github/issues/cristianmenguer/CCT-CameraApp?color=green">
   </a>
 </p>
 
@@ -41,7 +41,7 @@ A React Native app built to study the Camera Module!
 
 ### Getting started
 
-1. Clone this repo using `git clone https://github.com/cristianmenguer/CCT-Camera.git`.
-2. Move to the appropriate directory: `cd CCT-Camera`.<br />
+1. Clone this repo using `git clone https://github.com/cristianmenguer/CCT-CameraApp.git`.
+2. Move to the appropriate directory: `cd CCT-CameraApp`.<br />
 3. Run `npm install` to install dependencies.<br />
 4. Run `npm start`, it will open the browser when ready.
