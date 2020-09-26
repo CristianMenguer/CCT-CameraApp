@@ -1,19 +1,22 @@
 import React, { useState } from 'react'
 import { Text, View, TouchableOpacity, Image, StyleSheet } from 'react-native'
 import { Camera } from 'expo-camera'
+import { Video } from 'expo-av'
 import * as FaceDetector from 'expo-face-detector'
-import { BarCodeScanner } from 'expo-barcode-scanner'
+import * as MediaLibrary from 'expo-media-library'
 
 
 const PhotoScreen = () => {
 
     const [cameraRef, setCameraRef] = useState(null)
     const [type, setType] = useState(Camera.Constants.Type.back)
-    const [filePath, setFilePath] = useState('')
+    const [photoPath, setPhotoPath] = useState('')
+    const [videoPath, setVideoPath] = useState('')
     const [isFaceDetected, setFaceDetected] = useState(false)
     const [timerFace, setTimerFace] = useState(0)
     const [scanned, setScanned] = useState(false)
     const [barCode, setBarCode] = useState('')
+    const [videoRecorded, setVideoRecorded] = useState({})
 
     function handleFaceDetected({ faces }) {
         // if (faces != null && faces != 'undefined' && faces.length)
@@ -38,12 +41,44 @@ const PhotoScreen = () => {
 
         if (cameraRef) {
 
+            console.log('photo')
             const options = { quality: 1, base64: true, exif: true }
             const photo = await cameraRef.takePictureAsync()
 
-            setFilePath(photo.uri)
+            setPhotoPath(photo.uri)
 
-            setTimeout(() => { setFilePath('') }, 3000)
+            MediaLibrary.saveToLibraryAsync(photo.uri)
+
+            setTimeout(() => { setPhotoPath('') }, 3000)
+        }
+    }
+
+    function handlePressOut() {
+
+        if (cameraRef) {
+
+            console.log('pressout')
+            cameraRef.stopRecording()
+
+            setVideoPath(videoRecorded.uri)
+
+            MediaLibrary.saveToLibraryAsync(videoRecorded.uri)
+
+            setVideoRecorded({})
+
+            setTimeout(() => { setVideoPath('') }, 3000)
+        }
+    }
+
+    async function handleVideo() {
+
+        if (cameraRef) {
+
+            console.log('video')
+            cameraRef.recordAsync().then(data => {
+                setVideoRecorded(data)
+            })
+            console.log('after starting video')
         }
     }
 
@@ -55,10 +90,23 @@ const PhotoScreen = () => {
     return (
         <View style={{ flex: 1 }}>
 
-            {filePath !== '' &&
+            {photoPath !== '' &&
                 <Image
-                    source={{ uri: filePath }}
+                    source={{ uri: photoPath }}
                     style={styles.thumbnail}
+                />
+            }
+
+            {videoPath !== '' &&
+                <Video
+                    source={{ uri: videoPath }}
+                    rate={1.0}
+                    volume={1.0}
+                    isMuted={false}
+                    resizeMode="cover"
+                    shouldPlay
+                    isLooping
+                    style={{ width: 300, height: 300 }}
                 />
             }
 
@@ -74,7 +122,7 @@ const PhotoScreen = () => {
                 </TouchableOpacity>
             }
 
-            {filePath === '' && !scanned &&
+            {photoPath === '' && videoPath === '' && !scanned &&
                 <Camera
                     style={{ flex: 1 }}
                     type={type} ref={ref => {
@@ -113,7 +161,14 @@ const PhotoScreen = () => {
                         </TouchableOpacity>
 
                         {isFaceDetected && <Text style={{ fontSize: 18, marginBottom: 150, color: 'white' }}>Face Detected</Text>}
-                        <TouchableOpacity style={{ alignSelf: 'center' }} onPress={handleTakePicture}>
+                        <TouchableOpacity
+                            activeOpacity={0.4}
+                            style={{ alignSelf: 'center' }}
+                            onPress={handleTakePicture}
+                            delayLongPress={700}
+                            onLongPress={handleVideo}
+                            onPressOut={handlePressOut}
+                        >
                             <View style={{
                                 borderWidth: 2,
                                 borderRadius: 50,

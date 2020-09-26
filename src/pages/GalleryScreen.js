@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
+import React, { useState, useEffect } from 'react'
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import * as ImagePicker from 'expo-image-picker'
+import * as MediaLibrary from 'expo-media-library'
 
 const GalleryScreen = () => {
 

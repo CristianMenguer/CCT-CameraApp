@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Text, View, TouchableOpacity, Platform } from 'react-native'
 import Constants from 'expo-constants'
 
-import { getCameraPermission, getPickerPermission, getBarcodePermission } from '../services/Permissions'
+import { getCameraPermission, getPickerPermission, getBarcodePermission, getAudioPermission } from '../services/Permissions'
 
 const HomeScreen = () => {
     const [isPermissionGranted, setPermissionGranted] = useState(false)
@@ -34,6 +34,11 @@ const HomeScreen = () => {
         })
         //
         getBarcodePermission().then(data => {
+            //console.log(`getPickerPermission: ${data}`)
+            setPermissionGranted(data)
+        })
+        //
+        getAudioPermission().then(data => {
             //console.log(`getPickerPermission: ${data}`)
             setPermissionGranted(data)
         })
