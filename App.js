@@ -11,9 +11,10 @@ const Tab = createBottomTabNavigator()
 
 export default function App() {
 
+
     return (
         <>
-            <NavigationContainer>
+            <NavigationContainer >
                 <Tab.Navigator initialRouteName="Home" >
                     <Tab.Screen name="Photo" component={PhotoScreen} />
                     <Tab.Screen name="Home" component={HomeScreen} />
