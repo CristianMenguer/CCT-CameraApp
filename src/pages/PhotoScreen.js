@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import { Text, View, TouchableOpacity, Image, StyleSheet } from 'react-native'
+import { Text, View, TouchableOpacity, Image, StyleSheet, ToastAndroid } from 'react-native'
 import { Camera } from 'expo-camera'
 import { Video } from 'expo-av'
-import * as FaceDetector from 'expo-face-detector'
+//import * as FaceDetector from 'expo-face-detector'
 import * as MediaLibrary from 'expo-media-library'
 
 
@@ -10,31 +10,29 @@ const PhotoScreen = () => {
 
     const [cameraRef, setCameraRef] = useState(null)
     const [type, setType] = useState(Camera.Constants.Type.back)
+    const [flash, setFlash] = useState(Camera.Constants.FlashMode.on)
     const [photoPath, setPhotoPath] = useState('')
     const [videoPath, setVideoPath] = useState('')
     const [isFaceDetected, setFaceDetected] = useState(false)
+    const [isRecording, setRecording] = useState(false)
     const [timerFace, setTimerFace] = useState(0)
     const [scanned, setScanned] = useState(false)
     const [barCode, setBarCode] = useState('')
     const [videoRecorded, setVideoRecorded] = useState({})
 
     function handleFaceDetected({ faces }) {
-        // if (faces != null && faces != 'undefined' && faces.length)
-        {
-            if (!!faces && faces.length > 0) {
-                // console.log(faces)
-                setFaceDetected(true)
+        if (!!faces && faces.length > 0) {
+            console.log(faces)
+            setFaceDetected(true)
 
-                if (timerFace > 0)
-                    clearTimeout(timerFace)
+            if (timerFace > 0)
+                clearTimeout(timerFace)
 
-                const timerID = setTimeout(() => setFaceDetected(false), 200)
-                if (timerID > 0)
-                    setTimerFace(timerID)
-                //
-            }
+            const timerID = setTimeout(() => setFaceDetected(false), 200)
+            if (timerID > 0)
+                setTimerFace(timerID)
+            //
         }
-
     }
 
     async function handleTakePicture() {
@@ -42,10 +40,11 @@ const PhotoScreen = () => {
         if (cameraRef) {
 
             console.log('photo')
-            const options = { quality: 1, base64: true, exif: true }
             const photo = await cameraRef.takePictureAsync()
 
             setPhotoPath(photo.uri)
+
+            ToastAndroid.show('Test Toast', ToastAndroid.SHORT);
 
             MediaLibrary.saveToLibraryAsync(photo.uri)
 
@@ -55,11 +54,14 @@ const PhotoScreen = () => {
 
     function handlePressOut() {
 
-        if (cameraRef) {
+        if (cameraRef && isRecording) {
 
+            setRecording(false)
             console.log('pressout')
             cameraRef.stopRecording()
 
+            console.log(videoRecorded)
+            console.log(videoRecorded.uri)
             setVideoPath(videoRecorded.uri)
 
             MediaLibrary.saveToLibraryAsync(videoRecorded.uri)
@@ -75,10 +77,11 @@ const PhotoScreen = () => {
         if (cameraRef) {
 
             console.log('video')
+            setRecording(true)
+
             cameraRef.recordAsync().then(data => {
                 setVideoRecorded(data)
             })
-            console.log('after starting video')
         }
     }
 
@@ -106,7 +109,7 @@ const PhotoScreen = () => {
                     resizeMode="cover"
                     shouldPlay
                     isLooping
-                    style={{ width: 300, height: 300 }}
+                    style={styles.thumbnail}
                 />
             }
 
@@ -128,14 +131,8 @@ const PhotoScreen = () => {
                     type={type} ref={ref => {
                         setCameraRef(ref)
                     }}
-                    flashMode={Camera.Constants.FlashMode.off} //torch, on
+                    flashMode={Camera.Constants.FlashMode.on} //torch, on, off
                     autoFocus={Camera.Constants.AutoFocus.on}
-                    onFacesDetected={handleFaceDetected}
-                    faceDetectorSettings={{
-                        mode: FaceDetector.Constants.Mode.fast,
-                        detectLandmarks: FaceDetector.Constants.Landmarks.none,
-                        runClassifications: FaceDetector.Constants.Classifications.none
-                    }}
                     onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
                 >
 
@@ -160,7 +157,6 @@ const PhotoScreen = () => {
                             <Text style={{ fontSize: 18, marginBottom: 10, color: 'white' }}> Flip </Text>
                         </TouchableOpacity>
 
-                        {isFaceDetected && <Text style={{ fontSize: 18, marginBottom: 150, color: 'white' }}>Face Detected</Text>}
                         <TouchableOpacity
                             activeOpacity={0.4}
                             style={{ alignSelf: 'center' }}
@@ -196,7 +192,6 @@ const PhotoScreen = () => {
         </View>
     )
 
-
 }
 
 const styles = StyleSheet.create({
@@ -204,8 +199,6 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         flex: 1,
-        width: 300,
-        height: 300,
         resizeMode: "contain"
     }
 })
