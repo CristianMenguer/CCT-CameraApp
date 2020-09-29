@@ -12,19 +12,19 @@ const HomeScreen = () => {
         //
         if (Platform.OS !== 'web') {
             getCameraPermission().then(data => {
-                console.log(`getCameraPermission: ${data}`)
+                //console.log(`getCameraPermission: ${data}`)
             })
             //
             getPickerPermission().then(data => {
-                console.log(`getPickerPermission: ${data}`)
+                //console.log(`getPickerPermission: ${data}`)
             })
             //
             getBarcodePermission().then(data => {
-                console.log(`getBarcodePermission: ${data}`)
+                //console.log(`getBarcodePermission: ${data}`)
             })
             //
             getAudioPermission().then(data => {
-                console.log(`getAudioPermission: ${data}`)
+                //console.log(`getAudioPermission: ${data}`)
             })
         }
     }, [])

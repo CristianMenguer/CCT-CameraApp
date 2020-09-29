@@ -1,16 +1,17 @@
 import React, { useState } from 'react'
-import { Text, View, TouchableOpacity, Image, StyleSheet, ToastAndroid } from 'react-native'
+import { Platform, Text, View, TouchableOpacity, Image, StyleSheet } from 'react-native'
 import { Camera } from 'expo-camera'
 import { Video } from 'expo-av'
-//import * as FaceDetector from 'expo-face-detector'
+import * as FaceDetector from 'expo-face-detector'
 import * as MediaLibrary from 'expo-media-library'
+import Toast from 'react-native-tiny-toast'
 
 
 const PhotoScreen = () => {
 
     const [cameraRef, setCameraRef] = useState(null)
     const [type, setType] = useState(Camera.Constants.Type.back)
-    const [flash, setFlash] = useState(Camera.Constants.FlashMode.on)
+    const [flash, setFlash] = useState(Camera.Constants.FlashMode.on) //torch, on, off
     const [photoPath, setPhotoPath] = useState('')
     const [videoPath, setVideoPath] = useState('')
     const [isFaceDetected, setFaceDetected] = useState(false)
@@ -18,7 +19,6 @@ const PhotoScreen = () => {
     const [timerFace, setTimerFace] = useState(0)
     const [scanned, setScanned] = useState(false)
     const [barCode, setBarCode] = useState('')
-    const [videoRecorded, setVideoRecorded] = useState({})
 
     function handleFaceDetected({ faces }) {
         if (!!faces && faces.length > 0) {
@@ -39,14 +39,19 @@ const PhotoScreen = () => {
 
         if (cameraRef) {
 
-            console.log('photo')
-            const photo = await cameraRef.takePictureAsync()
+            const { uri } = await cameraRef.takePictureAsync()
 
-            setPhotoPath(photo.uri)
+            const asset = await MediaLibrary.createAssetAsync(uri)
 
-            ToastAndroid.show('Test Toast', ToastAndroid.SHORT);
+            MediaLibrary.createAlbumAsync('CCT-CameraApp', asset)
+                .then(() => {
+                    Toast.show('Photo saved in the gallery!')
+                })
+                .catch(error => {
+                    console.log('err', error)
+                })
 
-            MediaLibrary.saveToLibraryAsync(photo.uri)
+            setPhotoPath(uri)
 
             setTimeout(() => { setPhotoPath('') }, 3000)
         }
@@ -54,21 +59,12 @@ const PhotoScreen = () => {
 
     function handlePressOut() {
 
+        setRecording(false)
+
         if (cameraRef && isRecording) {
 
-            setRecording(false)
-            console.log('pressout')
+            log('Releasing the button after recording video')
             cameraRef.stopRecording()
-
-            console.log(videoRecorded)
-            console.log(videoRecorded.uri)
-            setVideoPath(videoRecorded.uri)
-
-            MediaLibrary.saveToLibraryAsync(videoRecorded.uri)
-
-            setVideoRecorded({})
-
-            setTimeout(() => { setVideoPath('') }, 3000)
         }
     }
 
@@ -76,18 +72,35 @@ const PhotoScreen = () => {
 
         if (cameraRef) {
 
-            console.log('video')
             setRecording(true)
 
-            cameraRef.recordAsync().then(data => {
-                setVideoRecorded(data)
-            })
+            cameraRef.recordAsync()
+                .then(async (data) => {
+
+                    const asset = await MediaLibrary.createAssetAsync(data.uri)
+                    MediaLibrary.createAlbumAsync('CCT-CameraApp', asset)
+                        .then(() => {
+                            log('Video saved in the gallery!')
+                        })
+                        .catch(error => {
+                            console.log('err', error)
+                        })
+                    //
+                    setVideoPath(data.uri)
+
+                    setTimeout(() => { setVideoPath('') }, 3000)
+                })
         }
     }
 
     const handleBarCodeScanned = ({ type, data }) => {
         setScanned(true)
         setBarCode(data)
+    }
+
+    function log(message) {
+        Toast.show(message)
+        console.log(message)
     }
 
     return (
@@ -131,7 +144,7 @@ const PhotoScreen = () => {
                     type={type} ref={ref => {
                         setCameraRef(ref)
                     }}
-                    flashMode={Camera.Constants.FlashMode.on} //torch, on, off
+                    flashMode={flash} //torch, on, off
                     autoFocus={Camera.Constants.AutoFocus.on}
                     onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
                 >
