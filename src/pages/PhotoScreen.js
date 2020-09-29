@@ -147,6 +147,12 @@ const PhotoScreen = () => {
                     flashMode={flash} //torch, on, off
                     autoFocus={Camera.Constants.AutoFocus.on}
                     onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+                    // onFacesDetected={handleFaceDetected}
+                    // faceDetectorSettings={{
+                    //     mode: FaceDetector.Constants.Mode.fast,
+                    //     detectLandmarks: FaceDetector.Constants.Landmarks.none,
+                    //    runClassifications: FaceDetector.Constants.Classifications.none
+                    // }}
                 >
 
                     <View
@@ -169,6 +175,7 @@ const PhotoScreen = () => {
                             }}>
                             <Text style={{ fontSize: 18, marginBottom: 10, color: 'white' }}> Flip </Text>
                         </TouchableOpacity>
+                        {isFaceDetected && <Text style={{ fontSize: 18, marginBottom: 150, color: 'white' }}>Face Detected</Text>}
 
                         <TouchableOpacity
                             activeOpacity={0.4}
