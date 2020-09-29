@@ -14,21 +14,26 @@ const PhotoScreen = () => {
     const [flash, setFlash] = useState(Camera.Constants.FlashMode.on) //torch, on, off
     const [photoPath, setPhotoPath] = useState('')
     const [videoPath, setVideoPath] = useState('')
-    const [isFaceDetected, setFaceDetected] = useState(false)
     const [isRecording, setRecording] = useState(false)
     const [timerFace, setTimerFace] = useState(0)
     const [scanned, setScanned] = useState(false)
     const [barCode, setBarCode] = useState('')
+    const [faces, setFaces] = useState([])
 
-    function handleFaceDetected({ faces }) {
+    function handleFaceDetected(props) {
+        let auxFaces = props.faces
+
+        for (let i = 0; i < auxFaces.length; i++)
+            auxFaces[i].ID = i + 1
+        //
+        setFaces(auxFaces)
+        //
         if (!!faces && faces.length > 0) {
-            console.log(faces)
-            setFaceDetected(true)
-
+            //
             if (timerFace > 0)
                 clearTimeout(timerFace)
 
-            const timerID = setTimeout(() => setFaceDetected(false), 200)
+            const timerID = setTimeout(() => setFaces({}), 200)
             if (timerID > 0)
                 setTimerFace(timerID)
             //
@@ -151,7 +156,7 @@ const PhotoScreen = () => {
                     // faceDetectorSettings={{
                     //     mode: FaceDetector.Constants.Mode.fast,
                     //     detectLandmarks: FaceDetector.Constants.Landmarks.none,
-                    //    runClassifications: FaceDetector.Constants.Classifications.none
+                    //     runClassifications: FaceDetector.Constants.Classifications.none
                     // }}
                 >
 
@@ -175,7 +180,24 @@ const PhotoScreen = () => {
                             }}>
                             <Text style={{ fontSize: 18, marginBottom: 10, color: 'white' }}> Flip </Text>
                         </TouchableOpacity>
-                        {isFaceDetected && <Text style={{ fontSize: 18, marginBottom: 150, color: 'white' }}>Face Detected</Text>}
+
+                        {faces[0] && faces.map(face => (
+
+                            <View key={face.ID} style={
+                                {
+                                    position: 'absolute',
+                                    top: face.bounds.origin.y,
+                                    left: face.bounds.origin.x,
+                                    height: face.bounds.size.height,
+                                    width: face.bounds.size.width,
+                                    //backgroundColor: 'white',
+                                    opacity: 0.5,
+                                    borderColor: 'yellow',
+                                    borderWidth: 8,
+                                    borderRadius: 20,
+                                }
+                            } />
+                        ))}
 
                         <TouchableOpacity
                             activeOpacity={0.4}
