@@ -32,7 +32,7 @@ const HomeScreen = () => {
     return (
         <View style={styles.containerMaster} >
             <View style={styles.container}>
-                <Image resi
+                <Image
                     source={logoImg}
                     style={styles.logo}
                 />

@@ -152,12 +152,12 @@ const PhotoScreen = () => {
                     flashMode={flash} //torch, on, off
                     autoFocus={Camera.Constants.AutoFocus.on}
                     onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-                    // onFacesDetected={handleFaceDetected}
-                    // faceDetectorSettings={{
-                    //     mode: FaceDetector.Constants.Mode.fast,
-                    //     detectLandmarks: FaceDetector.Constants.Landmarks.none,
-                    //     runClassifications: FaceDetector.Constants.Classifications.none
-                    // }}
+                    onFacesDetected={handleFaceDetected}
+                    faceDetectorSettings={{
+                        mode: FaceDetector.Constants.Mode.fast,
+                        detectLandmarks: FaceDetector.Constants.Landmarks.none,
+                        runClassifications: FaceDetector.Constants.Classifications.none
+                    }}
                 >
 
                     <View
