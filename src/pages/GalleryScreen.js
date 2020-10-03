@@ -1,50 +1,77 @@
 import React, { useState, useEffect } from 'react'
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
-import * as MediaLibrary from 'expo-media-library'
 
 const GalleryScreen = () => {
 
-    const [selectedImage, setSelectedImage] = useState(null)
+    const [selectedImage, setSelectedImage] = useState('')
 
     useEffect(() => {
 
-        ImagePicker.launchImageLibraryAsync().then(pickerResult => {
-            if (pickerResult.cancelled === true) {
-                setSelectedImage(null)
+        async function loadImage() {
+            if (selectedImage !== '')
                 return
+            //
+            const { cancelled, uri } = await ImagePicker.launchImageLibraryAsync({
+                allowsEditing: true,
+                mediaTypes: ImagePicker.MediaTypeOptions.Images
+            })
+            //
+            if (cancelled === true) {
+                setSelectedImage('')
+            } else {
+                setSelectedImage(uri)
             }
+        }
+        //
+        loadImage()
 
-            setSelectedImage({ localUri: pickerResult.uri })
-            setSelectedImage({ localUri: 'file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540anonymous%252FCCT-CameraApp-377e9ae6-a1f5-4486-b92a-9ed64d9ff0cd/Camera/5a232aa5-2715-4128-a80d-882d39f650bd.jpg'})
-        })
-
-    }, [])
-
-    if (selectedImage !== null) {
-        return (
-            <View style={styles.container}>
-                <Image
-                    source={{ uri: selectedImage.localUri }}
-                    style={styles.thumbnail}
-                />
-            </View>
-            // <Text>Image</Text>
-        )
-    }
+    }, [selectedImage])
 
     return (
-        <View style={styles.container}>
+        <View style={styles.container} >
+            {selectedImage === '' ?
+                <Text style={styles.text} >Waiting...</Text>
+                :
+                <Image
+                    style={styles.image}
+                    source={{ uri: selectedImage }}
+                />
+            }
+            <TouchableOpacity style={styles.button} onPress={() => setSelectedImage('')} >
+                <Text style={styles.text} >Select Picture</Text>
+            </TouchableOpacity>
         </View>
-        // <Text>Null</Text>
     )
 }
 
 const styles = StyleSheet.create({
-    thumbnail: {
-        width: 300,
-        height: 300,
-        resizeMode: "contain"
+    container: {
+        flex: 1,
+        flexDirection: 'column',
+        marginHorizontal: 16,
+        marginTop: 24,
+
+    },
+    image: {
+        flex: 1,
+        resizeMode: 'contain',
+    },
+    button: {
+        alignSelf: 'center',
+        backgroundColor: '#e91e63',
+        borderRadius: 20,
+        height: 64,
+        width: '50%',
+        marginVertical: 16,
+        justifyContent: 'center',
+        alignItems: 'center',
+
+    },
+    text: {
+        fontWeight: 'bold',
+        fontSize: 16,
+        color: '#FFF'
     }
 })
 

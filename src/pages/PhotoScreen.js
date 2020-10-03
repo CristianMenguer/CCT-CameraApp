@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Platform, Text, View, TouchableOpacity, Image, StyleSheet } from 'react-native'
+import { Text, View, TouchableOpacity, Image, StyleSheet } from 'react-native'
 import { Camera } from 'expo-camera'
 import { Video } from 'expo-av'
 import * as FaceDetector from 'expo-face-detector'
@@ -18,6 +18,7 @@ const PhotoScreen = () => {
     const [timerFace, setTimerFace] = useState(0)
     const [scanned, setScanned] = useState(false)
     const [barCode, setBarCode] = useState('')
+    const [barType, setBarType] = useState('')
     const [faces, setFaces] = useState([])
 
     function handleFaceDetected(props) {
@@ -83,7 +84,7 @@ const PhotoScreen = () => {
                 .then(async (data) => {
 
                     const asset = await MediaLibrary.createAssetAsync(data.uri)
-                    MediaLibrary.createAlbumAsync('CCT-CameraApp', asset)
+                    MediaLibrary.createAlbumAsync('CCT-CameraApp', asset, false)
                         .then(() => {
                             log('Video saved in the gallery!')
                         })
@@ -101,6 +102,7 @@ const PhotoScreen = () => {
     const handleBarCodeScanned = ({ type, data }) => {
         setScanned(true)
         setBarCode(data)
+        setBarType(type)
     }
 
     function log(message) {
@@ -132,15 +134,22 @@ const PhotoScreen = () => {
             }
 
             {scanned &&
-                <TouchableOpacity onPress={() => {
-                    setScanned(false)
-                    setBarCode('')
-                }} style={
-                    { flex: 1, justifyContent: "center", alignItems: "center" }
-                } >
-                    <Text>Code: {barCode}</Text>
-                    <Text>Tap to Scan Again</Text>
-                </TouchableOpacity>
+                <View style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }} >
+                    <Text>Code:  {barCode}</Text>
+                    <TouchableOpacity
+                        onPress={() => {
+                            setScanned(false)
+                            setBarCode('')
+                            setBarType('')
+                        }}
+                        style={styles.button} >
+                        <Text style={{ color: '#FFF' }} >Back to Camera</Text>
+                    </TouchableOpacity>
+                </View>
             }
 
             {photoPath === '' && videoPath === '' && !scanned &&
@@ -201,7 +210,10 @@ const PhotoScreen = () => {
 
                         <TouchableOpacity
                             activeOpacity={0.4}
-                            style={{ alignSelf: 'center' }}
+                            style={{
+                                alignSelf: 'center',
+                                marginBottom: 8
+                            }}
                             onPress={handleTakePicture}
                             delayLongPress={700}
                             onLongPress={handleVideo}
@@ -242,6 +254,15 @@ const styles = StyleSheet.create({
         alignItems: "center",
         flex: 1,
         resizeMode: "contain"
+    },
+    button: {
+        backgroundColor: '#e91e63',
+        borderRadius: 20,
+        justifyContent: "center",
+        alignItems: "center",
+        height: 64,
+        width: '50%',
+        marginVertical: 16,
     }
 })
 
