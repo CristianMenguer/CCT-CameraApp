@@ -112,7 +112,7 @@ const PhotoScreen = (navProps) => {
     }
 
 
-      return (
+    return (
         <View style={{ flex: 1 }}>
 
             {photoPath !== '' &&
@@ -154,35 +154,25 @@ const PhotoScreen = (navProps) => {
                 </View>
             }
 
-            
-            
+
+
             {photoPath === '' && videoPath === '' && !scanned &&
-                
+
                 <Camera
                     style={{ flex: 1 }}
                     type={type} ref={ref => {
                         setCameraRef(ref)
                     }}
-                    flashMode={Camera.Constants.FlashMode.on} //torch, on, off                   
+                    flashMode={flash} //torch, on, off
                     autoFocus={Camera.Constants.AutoFocus.on}
                     onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-<<<<<<< HEAD
                     // onFacesDetected={handleFaceDetected}
                     // faceDetectorSettings={{
                     //     mode: FaceDetector.Constants.Mode.fast,
                     //     detectLandmarks: FaceDetector.Constants.Landmarks.none,
                     //     runClassifications: FaceDetector.Constants.Classifications.none
                     // }}
-                >                
-=======
-                    onFacesDetected={handleFaceDetected}
-                    faceDetectorSettings={{
-                        mode: FaceDetector.Constants.Mode.fast,
-                        detectLandmarks: FaceDetector.Constants.Landmarks.none,
-                        runClassifications: FaceDetector.Constants.Classifications.none
-                    }}
                 >
->>>>>>> ea1d027cc226da1503a5dea8d7a820cc05704b27
 
                     <View
                         style={{
@@ -202,33 +192,33 @@ const PhotoScreen = (navProps) => {
                                         : Camera.Constants.Type.back
                                 );
                             }}>
-                           
-                            <Icon name='camera-party-mode' color='white' size='32'/>                           
+
+                            <Icon name='camera-party-mode' color='white' size={32}/>
                         </TouchableOpacity>
 
                       {/* NOT WORKING YET :'( */}
                             <TouchableOpacity
-                                
+
                                 onPress={() => {
-                                    
+
                                     setFlash(
                                         flash === Camera.Constants.FlashMode.on
                                             ? Camera.Constants.FlashMode.off
                                             : Camera.Constants.FlashMode.on
-                                    );                                  
-                                    
+                                    );
+
                                 }}
                                 >
                                 {flash === Camera.Constants.FlashMode.on ?
-                                    <Icon name='flash' color='white' size='32'/>
-                                    
+                                    <Icon name='flash' color='white' size={32}/>
+
                                     :
 
-                                    <Icon name='flash-off' color='white' size='32'/>                                    
+                                    <Icon name='flash-off' color='white' size={32}/>
                                 }
-                            
+
                             </TouchableOpacity>
-                   
+
                         {faces[0] && faces.map(face => (
 
                             <View key={face.ID} style={
@@ -303,7 +293,7 @@ const styles = StyleSheet.create({
         width: '50%',
         marginVertical: 16,
     }
-   
+
 })
 
 export default PhotoScreen
