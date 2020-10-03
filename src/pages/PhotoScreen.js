@@ -5,6 +5,8 @@ import { Video } from 'expo-av'
 import * as FaceDetector from 'expo-face-detector'
 import * as MediaLibrary from 'expo-media-library'
 import Toast from 'react-native-tiny-toast'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+
 
 
 const PhotoScreen = () => {
@@ -108,7 +110,8 @@ const PhotoScreen = () => {
         console.log(message)
     }
 
-    return (
+
+      return (
         <View style={{ flex: 1 }}>
 
             {photoPath !== '' &&
@@ -143,13 +146,16 @@ const PhotoScreen = () => {
                 </TouchableOpacity>
             }
 
+            
+            
             {photoPath === '' && videoPath === '' && !scanned &&
+                
                 <Camera
                     style={{ flex: 1 }}
                     type={type} ref={ref => {
                         setCameraRef(ref)
                     }}
-                    flashMode={flash} //torch, on, off
+                    flashMode={Camera.Constants.FlashMode.on} //torch, on, off                   
                     autoFocus={Camera.Constants.AutoFocus.on}
                     onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
                     // onFacesDetected={handleFaceDetected}
@@ -158,7 +164,7 @@ const PhotoScreen = () => {
                     //     detectLandmarks: FaceDetector.Constants.Landmarks.none,
                     //     runClassifications: FaceDetector.Constants.Classifications.none
                     // }}
-                >
+                >                
 
                     <View
                         style={{
@@ -178,9 +184,33 @@ const PhotoScreen = () => {
                                         : Camera.Constants.Type.back
                                 );
                             }}>
-                            <Text style={{ fontSize: 18, marginBottom: 10, color: 'white' }}> Flip </Text>
+                           
+                            <Icon name='camera-party-mode' color='white' size='32'/>                           
                         </TouchableOpacity>
 
+                      {/* NOT WORKING YET :'( */}
+                            <TouchableOpacity
+                                
+                                onPress={() => {
+                                    
+                                    setFlash(
+                                        flash === Camera.Constants.FlashMode.on
+                                            ? Camera.Constants.FlashMode.off
+                                            : Camera.Constants.FlashMode.on
+                                    );                                  
+                                    
+                                }}
+                                >
+                                {flash === Camera.Constants.FlashMode.on ?
+                                    <Icon name='flash' color='white' size='32'/>
+                                    
+                                    :
+
+                                    <Icon name='flash-off' color='white' size='32'/>                                    
+                                }
+                            
+                            </TouchableOpacity>
+                   
                         {faces[0] && faces.map(face => (
 
                             <View key={face.ID} style={
@@ -243,6 +273,7 @@ const styles = StyleSheet.create({
         flex: 1,
         resizeMode: "contain"
     }
+   
 })
 
 export default PhotoScreen
