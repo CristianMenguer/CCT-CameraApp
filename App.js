@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -9,18 +9,23 @@ import GalleryScreen from './src/pages/GalleryScreen'
 import HomeScreen from './src/pages/HomeScreen'
 
 
-const Tab = createBottomTabNavigator()
 
 export default function App() {
+
+    const Tab = createBottomTabNavigator()
+
     return (
         <>
             <NavigationContainer >
-                <Tab.Navigator initialRouteName="Home"
+                <Tab.Navigator
+                    initialRouteName="Home"
                     tabBarOptions={{
                         activeTintColor: '#e91e63',
                         labelPosition: 'below-icon'
-                    }}>
-                    <Tab.Screen name="Photo"
+                    }}
+                    >
+                    <Tab.Screen
+                        name="Photo"
                         component={PhotoScreen}
                         options={{
                             tabBarLabel: 'Photo',

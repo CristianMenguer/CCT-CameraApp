@@ -6,39 +6,44 @@ const GalleryScreen = () => {
 
     const [selectedImage, setSelectedImage] = useState('')
 
+    async function loadImage(forceLoad = false) {
+
+        if (!forceLoad && selectedImage !== '')
+            return
+        //
+        const { cancelled, uri } = await ImagePicker.launchImageLibraryAsync({
+            allowsEditing: true,
+            mediaTypes: ImagePicker.MediaTypeOptions.Images
+        })
+        //
+        if (cancelled === true) {
+            setSelectedImage('')
+        } else {
+            setSelectedImage(uri)
+        }
+    }
+
     useEffect(() => {
 
-        async function loadImage() {
-            if (selectedImage !== '')
-                return
-            //
-            const { cancelled, uri } = await ImagePicker.launchImageLibraryAsync({
-                allowsEditing: true,
-                mediaTypes: ImagePicker.MediaTypeOptions.Images
-            })
-            //
-            if (cancelled === true) {
-                setSelectedImage('')
-            } else {
-                setSelectedImage(uri)
-            }
-        }
-        //
         loadImage()
 
-    }, [selectedImage])
+    }, [])
 
     return (
         <View style={styles.container} >
-            {selectedImage === '' ?
-                <Text style={styles.text} >Waiting...</Text>
-                :
-                <Image
-                    style={styles.image}
-                    source={{ uri: selectedImage }}
-                />
-            }
-            <TouchableOpacity style={styles.button} onPress={() => setSelectedImage('')} >
+            <View style={styles.containerImage} >
+                {selectedImage !== '' &&
+
+                    <Image
+                        style={styles.image}
+                        source={{ uri: selectedImage }}
+                    />
+                }
+            </View>
+
+            <TouchableOpacity
+                style={styles.button}
+                onPress={() => loadImage(true)} >
                 <Text style={styles.text} >Select Picture</Text>
             </TouchableOpacity>
         </View>
@@ -52,6 +57,9 @@ const styles = StyleSheet.create({
         marginHorizontal: 16,
         marginTop: 24,
 
+    },
+    containerImage: {
+        flex: 1,
     },
     image: {
         flex: 1,
@@ -72,7 +80,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 16,
         color: '#FFF'
-    }
+    },
 })
 
 export default GalleryScreen

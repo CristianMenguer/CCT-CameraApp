@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Text, View, Platform, StyleSheet, Image } from 'react-native'
 import Constants from 'expo-constants'
+import Toast from 'react-native-tiny-toast'
 
 import { getCameraPermission, getPickerPermission, getBarcodePermission, getAudioPermission } from '../services/Permissions'
 
@@ -8,23 +9,40 @@ import logoImg from '../../assets/logo.jpg'
 
 const HomeScreen = () => {
 
+    const [cameraPermission, setCameraPermission] = useState(false)
+    const [galleryPermission, setGalleryPermission] = useState(false)
+    const [barCodePermission, setBarCodePermission] = useState(false)
+    const [audioPermission, setAudioPermission] = useState(false)
+
     useEffect(() => {
         //
         if (Platform.OS !== 'web') {
             getCameraPermission().then(data => {
-                //console.log(`getCameraPermission: ${data}`)
+                setCameraPermission(data === 'granted')
+                //
+                if (data !== 'granted')
+                    Toast.show('CCT-CameraApp needs access to your camera!')
             })
             //
             getPickerPermission().then(data => {
-                //console.log(`getPickerPermission: ${data}`)
+                setGalleryPermission(data === 'granted')
+                //
+                if (data !== 'granted')
+                    Toast.show('CCT-CameraApp needs access to your gallery!')
             })
             //
             getBarcodePermission().then(data => {
-                //console.log(`getBarcodePermission: ${data}`)
+                setBarCodePermission(data === 'granted')
+                //
+                if (data !== 'granted')
+                    Toast.show('CCT-CameraApp needs access to your barCode scanner!')
             })
             //
             getAudioPermission().then(data => {
-                //console.log(`getAudioPermission: ${data}`)
+                setAudioPermission(data === 'granted')
+                //
+                if (data !== 'granted')
+                    Toast.show('CCT-CameraApp needs access to your audio!')
             })
         }
     }, [])

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Text, View, TouchableOpacity, Image, StyleSheet } from 'react-native'
 import { Camera } from 'expo-camera'
 import { Video } from 'expo-av'
@@ -6,8 +6,7 @@ import * as FaceDetector from 'expo-face-detector'
 import * as MediaLibrary from 'expo-media-library'
 import Toast from 'react-native-tiny-toast'
 
-
-const PhotoScreen = () => {
+const PhotoScreen = (navProps) => {
 
     const [cameraRef, setCameraRef] = useState(null)
     const [type, setType] = useState(Camera.Constants.Type.back)
