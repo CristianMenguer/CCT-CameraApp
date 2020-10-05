@@ -166,12 +166,12 @@ const PhotoScreen = (navProps) => {
                     flashMode={flash} //torch, on, off
                     autoFocus={Camera.Constants.AutoFocus.on}
                     onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-                    // onFacesDetected={handleFaceDetected}
-                    // faceDetectorSettings={{
-                    //     mode: FaceDetector.Constants.Mode.fast,
-                    //     detectLandmarks: FaceDetector.Constants.Landmarks.none,
-                    //     runClassifications: FaceDetector.Constants.Classifications.none
-                    // }}
+                    onFacesDetected={handleFaceDetected}
+                    faceDetectorSettings={{
+                        mode: FaceDetector.Constants.Mode.fast,
+                        detectLandmarks: FaceDetector.Constants.Landmarks.none,
+                        runClassifications: FaceDetector.Constants.Classifications.none
+                    }}
                 >
 
                     <View
@@ -196,7 +196,6 @@ const PhotoScreen = (navProps) => {
                             <Icon name='camera-party-mode' color='white' size={32}/>
                         </TouchableOpacity>
 
-                      {/* NOT WORKING YET :'( */}
                             <TouchableOpacity
 
                                 onPress={() => {
