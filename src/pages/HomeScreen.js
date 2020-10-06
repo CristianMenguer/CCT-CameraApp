@@ -81,6 +81,7 @@ const HomeScreen = () => {
     )
 }
 
+// This variable contains all the css of this screen
 const styles = StyleSheet.create({
     containerMaster: {
         flex: 1,

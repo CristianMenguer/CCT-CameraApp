@@ -62,6 +62,7 @@ const GalleryScreen = () => {
     )
 }
 
+// This variable contains all the css of this screen
 const styles = StyleSheet.create({
     container: {
         flex: 1,
