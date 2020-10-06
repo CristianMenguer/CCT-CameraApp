@@ -3,7 +3,9 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
-
+/*
+ * importing the pages/tabs of the app
+*/
 import PhotoScreen from './src/pages/PhotoScreen'
 import GalleryScreen from './src/pages/GalleryScreen'
 import HomeScreen from './src/pages/HomeScreen'
@@ -12,8 +14,13 @@ import HomeScreen from './src/pages/HomeScreen'
 
 export default function App() {
 
+    // Menu
     const Tab = createBottomTabNavigator()
 
+
+    /*
+     * Here the options and screens are set
+     */
     return (
         <>
             <NavigationContainer >
@@ -23,7 +30,7 @@ export default function App() {
                         activeTintColor: '#e91e63',
                         labelPosition: 'below-icon'
                     }}
-                    >
+                >
                     <Tab.Screen
                         name="Photo"
                         component={PhotoScreen}

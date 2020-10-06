@@ -7,13 +7,20 @@ import { getCameraPermission, getPickerPermission, getBarcodePermission, getAudi
 
 import logoImg from '../../assets/logo.jpg'
 
+/*
+* This is the home screen. In this screen, all the permissions are asked
+* and some information about the app and the device are displayed on the screen
+*/
+
 const HomeScreen = () => {
 
+    // variables that will store each permission
     const [cameraPermission, setCameraPermission] = useState(false)
     const [galleryPermission, setGalleryPermission] = useState(false)
     const [barCodePermission, setBarCodePermission] = useState(false)
     const [audioPermission, setAudioPermission] = useState(false)
 
+    // this function will run after rendering the screen, in order to aske for the permissions
     useEffect(() => {
         //
         if (Platform.OS !== 'web') {
@@ -82,15 +89,12 @@ const styles = StyleSheet.create({
     },
     container: {
         backgroundColor: '#F3F4F4',
-        // flex: 1,
         justifyContent: 'space-between',
         alignItems: 'center',
         height: "70%",
         width: 500,
     },
     logo: {
-        // height: 120,
-        // width: 455,
         width: 300,
         height: 79
     },

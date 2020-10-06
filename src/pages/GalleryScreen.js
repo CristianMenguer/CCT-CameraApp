@@ -4,8 +4,18 @@ import * as ImagePicker from 'expo-image-picker'
 
 const GalleryScreen = () => {
 
+    // variable used to store the path of the selected image from the gallery
     const [selectedImage, setSelectedImage] = useState('')
 
+    /*
+    * This function opens the image picker and allows the user to select one photo
+    * from the gallery. If selected, the path of the photo will be stored
+    * in the variable selectedImage;
+    *
+    * The parameter forceLoad is used to check if, even having a photo already loaded, it will
+    * ask for another one. It is necessary to avoid the app to ask for a new photo every time
+    * it renders the screen and make sure it will open the image picker when the button is pressed
+    */
     async function loadImage(forceLoad = false) {
 
         if (!forceLoad && selectedImage !== '')
@@ -23,6 +33,7 @@ const GalleryScreen = () => {
         }
     }
 
+    // It will call the function every time the screen is rendered
     useEffect(() => {
 
         loadImage()
@@ -32,6 +43,7 @@ const GalleryScreen = () => {
     return (
         <View style={styles.container} >
             <View style={styles.containerImage} >
+                {/* The image will only be shown if the path is set */}
                 {selectedImage !== '' &&
 
                     <Image
