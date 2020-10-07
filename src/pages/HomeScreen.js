@@ -6,6 +6,7 @@ import Toast from 'react-native-tiny-toast'
 import { getCameraPermission, getPickerPermission, getBarcodePermission, getAudioPermission } from '../services/Permissions'
 
 import logoImg from '../../assets/logo.jpg'
+import { getPermissionsAsync } from 'expo-av/build/Audio'
 
 /*
 * This is the home screen. In this screen, all the permissions are asked
@@ -21,37 +22,38 @@ const HomeScreen = () => {
     const [audioPermission, setAudioPermission] = useState(false)
 
     // this function will run after rendering the screen, in order to aske for the permissions
-    useEffect(() => {
-        //
+    async function getPermissions() {
         if (Platform.OS !== 'web') {
-            getCameraPermission().then(data => {
-                setCameraPermission(data === 'granted')
-                //
-                if (data !== 'granted')
-                    Toast.show('CCT-CameraApp needs access to your camera!')
-            })
+
+            let data = await getCameraPermission()
+            setCameraPermission(data === 'granted')
             //
-            getPickerPermission().then(data => {
-                setGalleryPermission(data === 'granted')
-                //
-                if (data !== 'granted')
-                    Toast.show('CCT-CameraApp needs access to your gallery!')
-            })
+            if (data !== 'granted')
+                Toast.show('CCT-CameraApp needs access to your camera!')
             //
-            getBarcodePermission().then(data => {
-                setBarCodePermission(data === 'granted')
-                //
-                if (data !== 'granted')
-                    Toast.show('CCT-CameraApp needs access to your barCode scanner!')
-            })
+            data = await getPickerPermission()
+            setGalleryPermission(data === 'granted')
             //
-            getAudioPermission().then(data => {
-                setAudioPermission(data === 'granted')
-                //
-                if (data !== 'granted')
-                    Toast.show('CCT-CameraApp needs access to your audio!')
-            })
+            if (data !== 'granted')
+                Toast.show('CCT-CameraApp needs access to your gallery!')
+            //
+            data = await getBarcodePermission()
+            setBarCodePermission(data === 'granted')
+            //
+            if (data !== 'granted')
+                Toast.show('CCT-CameraApp needs access to your barCode scanner!')
+            //
+            data = await getAudioPermission()
+            setAudioPermission(data === 'granted')
+            //
+            if (data !== 'granted')
+                Toast.show('CCT-CameraApp needs access to your audio!')
+
         }
+    }
+
+    useEffect(() => {
+        getPermissions()
     }, [])
 
     return (

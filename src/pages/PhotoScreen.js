@@ -135,7 +135,7 @@ const PhotoScreen = () => {
                     isMuted={false}
                     resizeMode="cover"
                     shouldPlay
-                    isLooping={trye}
+                    isLooping={true}
                     style={styles.mediaOnScreen}
                 />
             }
